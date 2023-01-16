@@ -3,6 +3,12 @@
 :- use_module(library(subsumes), [subsumes/2]).
 :- use_module(guardedmap, [guardedmap/3]).
 
+%!  anti_unify(?A, ?B, ?LGG) is semidet.
+%
+%   anti_unify/3 maintains the relation that `LGG` is the least general
+%   generalization of `A` and `B`.
+%
+%   See the unit tests for examples.
 anti_unify(A, B, LGG) :-
     % It's cleaner to assert subsumption up front,
     % even though it traverses LGG more than necessary.
