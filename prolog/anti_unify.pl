@@ -1,6 +1,6 @@
 :- module(anti_unify, [anti_unify/3]).
 
-:- use_module(subsumes, [subsumes/2]).
+:- use_module(library(subsumes), [subsumes/2]).
 :- use_module(guardedmap, [guardedmap/3]).
 
 anti_unify(A, B, LGG) :-
