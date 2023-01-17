@@ -4,4 +4,3 @@ title('Anti-unification. anti_unify/3 is intended as a relational drop-in replac
 author('Geoffrey Churchill', 'geoffrey.a.churchill@gmail.com').
 home('https://github.com/GeoffChurch/anti_unify').
 requires(subsumes).
-requires(clpfd).
