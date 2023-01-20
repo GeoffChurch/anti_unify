@@ -38,12 +38,7 @@ test(direct_identity_inferred) :-
     X == Z.
 
 test(indirect_identity_inferred_var_fails) :-
-    % We can't detect when X and Y are unified, so unfortunately
-    % we can't trigger unification of X and Z. A fix would be to
-    % add attributes to variables in the antiunificands and use
-    % attr_unify_hook, but e.g. attrvars can't be tabled (in SWI)
-    % so they probably shouldn't be used in cases where there is
-    % no observable behavioral difference wrt unification.
+    % TODO attribute antiunificands so we can trigger unification here.
     anti_unify(X, Y, Z),
     X = Y,
     X \== Z.
