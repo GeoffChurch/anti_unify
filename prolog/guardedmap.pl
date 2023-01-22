@@ -1,5 +1,3 @@
-:- module(guardedmap, [guardedmap/3]).
-
 :- use_module(library(clpfd), [transpose/2]).
 
 :- meta_predicate guardedmap(:, :, +).

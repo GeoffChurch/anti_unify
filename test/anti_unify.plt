@@ -1,4 +1,4 @@
-:- use_module(anti_unify).
+:- use_module("../prolog/anti_unify").
 
 :- begin_tests(anti_unify).
 
@@ -37,11 +37,10 @@ test(direct_identity_inferred) :-
     anti_unify(X, X, Z),
     X == Z.
 
-test(indirect_identity_inferred_var_fails) :-
-    % TODO attribute antiunificands so we can trigger unification here.
+test(indirect_identity_inferred_var) :-
     anti_unify(X, Y, Z),
     X = Y,
-    X \== Z.
+    X == Z.
     
 test(indirect_identity_inferred_nonvar) :-
     anti_unify(X, Y, Z),
