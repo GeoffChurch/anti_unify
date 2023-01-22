@@ -51,7 +51,9 @@ set_callbacks(Var, Callbacks) :- put_attr(Var, anti_unify, Callbacks).
 
 add_callback(Var, Callback) :-
     get_callbacks(Var, Callbacks),
-    set_callbacks(Var, [Callback|Callbacks]).
+    maplist(\==(Callback), Callbacks)
+    ->  set_callbacks(Var, [Callback|Callbacks])
+    ;   true.
 
 attr_unify_hook(XCallbacks, Y) :-
     % Call it all!

@@ -19,8 +19,8 @@ X = Y, Y = Z, Z = f(Z).
 X = g(_A),
 Y = g(_B),
 Z = g(_C),
-maplist(subsumes(_C), [_B, _A]),
-when((nonvar(_A), nonvar(_B)), anti_unify:myguardedmap(_A, _B, _C)).
+anti_unify(_A, _B, _C),
+maplist(subsumes(_C), [_A, _B]).
 ```
 
 See the unit tests in [`test/anti_unify.plt`](test/anti_unify.plt) for more examples.
