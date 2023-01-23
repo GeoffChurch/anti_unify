@@ -25,10 +25,20 @@ maplist(subsumes(_C), [_A, _B]).
 
 See the unit tests in [`test/anti_unify.plt`](test/anti_unify.plt) for more examples.
 
+## Installation in SWI-Prolog
+
+```prolog
+?- pack_install(anti_unify).
+```
+
+## Testing
+
 Executing the following goal from the top-level `subsumes` directory should run all the tests:
 ```prolog
-?- expand_file_name("test/**.plt", Tests), maplist(consult, Tests), run_tests.
+?- expand_file_name("test/*.plt", Tests), maplist(consult, Tests), run_tests.
 ```
+
+---
 
 TODO: make ISO-compatible.
 
