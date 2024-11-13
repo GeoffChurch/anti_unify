@@ -33,20 +33,22 @@ test(induced_cyclic_data) :-
     Y == f(Y),
     X == Y.
 
-test(direct_identity_inferred) :-
-    anti_unify(X, X, Z),
-    X == Z.
+test(direct_identity_inferred, [X == Z]) :-
+    anti_unify(X, X, Z).
 
-test(indirect_identity_inferred_var) :-
+test(indirect_identity_inferred_var, [X == Z]) :-
     anti_unify(X, Y, Z),
-    X = Y,
-    X == Z.
+    X = Y.
     
-test(indirect_identity_inferred_nonvar) :-
+test(indirect_identity_inferred_nonvar, [X == Z]) :-
     anti_unify(X, Y, Z),
     X = Y,
-    X = f(_),
-    X == Z.
+    X = f(_).
+
+test(var_multiple_occurrences, [Z =@= f(C, C)]) :-
+    anti_unify(X, Y, Z),
+    X = f(A, A),
+    Y = f(B, B).
 
 :- end_tests(anti_unify).
 

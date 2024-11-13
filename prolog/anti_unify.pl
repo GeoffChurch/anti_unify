@@ -1,7 +1,9 @@
 :- module(anti_unify, [anti_unify/3]).
 
 :- use_module(library(subsumes)).
-:- consult(guardedmap).
+:- use_module(library(apply), [maplist/2, maplist/3, include/3]).
+
+:- use_module(guardedmap).
 
 %!  anti_unify(?A, ?B, ?LGG) is semidet.
 %
@@ -17,31 +19,32 @@ anti_unify(A, B, LGG) :-
     myguardedmap(A, B, LGG).
 
 % anti_unify(A, B, LGG) assumes that guard(A, B, LGG) has just succeeded.
-anti_unify_(A, B, LGG) :-
+anti_unify_(A, B, LGG), A == B =>
     % If A == B then it is its own LGG.
-    A == B, !, LGG = A.
-anti_unify_(A, B, LGG) :-
+    LGG = A.
+
+anti_unify_(A, B, LGG), (LGG == A ; LGG == B) =>
     % anti_unify(A, LGG, LGG) iff LGG subsumes A, which is already
     % enforced, so the "when" clause is superfluous.
-    (LGG == A ; LGG == B), !.
-anti_unify_(A, B, _LGG) :-
+    true.
+anti_unify_(A, B, _LGG), nonvar(A), nonvar(B) =>
     % If A and B are both nonvar then guard(A, B, LGG) implies that they
     % have different functors, so LGG is permavar (can never be nonvar),
     % which characterizes its observable behavior and is already enforced
     % by its existing subsumption of A and B.
-    nonvar(A), nonvar(B), !.
-anti_unify_(A, B, LGG) :-
+    true.
+anti_unify_(A, B, LGG) =>
     Callback = myguardedmap(A, B, LGG),
     (var(A)  ->  add_callback(A, Callback) ; true),
     (var(B)  ->  add_callback(B, Callback) ; true).
-
-myguardedmap(A, B, LGG) :- guardedmap(guard, anti_unify_, [A, B, LGG]).
 
 guard(A, B, _LGG) :-
     once(A == B ;
          var(A) ;
          var(B) ;
          \+ same_functor(A, B)).
+
+myguardedmap(A, B, LGG) :- guardedmap(guard, anti_unify_, A, B, LGG).
 
 get_callbacks(Var, Callbacks) :- get_attr(Var, anti_unify, Callbacks), !.
 get_callbacks(_, []).
@@ -64,10 +67,16 @@ attr_unify_hook(XCallbacks, Y) :-
 	maplist(call, YCallbacks)
     ;   true).
 
+id3(X, X, X).
+
+attribute_goals_ -->
+    id3(V),
+    get_callbacks,
+    maplist(private_public),
+    include(is_first_antiunificand(V)).
+
 attribute_goals(V) -->
-    { call_dcg(
-	  (get_callbacks, maplist(private_public), include(is_first_antiunificand(V))),
-	  V, Goals) },
+    { attribute_goals_(V, Goals) },
     Goals.
 
 % The callbacks use the non-exported myguardedmap/3 as a slight optimization,

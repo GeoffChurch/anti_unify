@@ -35,7 +35,7 @@ See the unit tests in [`test/anti_unify.plt`](test/anti_unify.plt) for more exam
 
 Executing the following goal from the top-level `anti_unify` directory should run all the tests:
 ```prolog
-?- expand_file_name("test/*.plt", Tests), maplist(consult, Tests), run_tests.
+?- consult("test/*.plt"), run_tests.
 ```
 
 ---
