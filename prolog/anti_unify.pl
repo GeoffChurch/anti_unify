@@ -46,11 +46,13 @@ guard(A, B, _LGG) :-
 
 myguardedmap(A, B, LGG) :- guardedmap(guard, anti_unify_, A, B, LGG).
 
-get_callbacks(Var, Callbacks) :- get_attr(Var, anti_unify, Callbacks), !.
-get_callbacks(_, []).
+get_callbacks(Var, Cs) :-
+    get_attr(Var, anti_unify, Cs0)
+    ->  Cs = Cs0
+    ;   Cs = [].
 
-set_callbacks(Var, []) :- !, del_attr(Var, anti_unify).
-set_callbacks(Var, Callbacks) :- put_attr(Var, anti_unify, Callbacks).
+set_callbacks(Var, [])        => del_attr(Var, anti_unify).
+set_callbacks(Var, Callbacks) => put_attr(Var, anti_unify, Callbacks).
 
 add_callback(Var, Callback) :-
     get_callbacks(Var, Callbacks),
@@ -73,7 +75,7 @@ attribute_goals_ -->
     id3(V),
     get_callbacks,
     maplist(private_public),
-    include(is_first_antiunificand(V)).
+    include(is_representative_antiunificand(V)).
 
 attribute_goals(V) -->
     { attribute_goals_(V, Goals) },
@@ -84,9 +86,10 @@ attribute_goals(V) -->
 private_public(myguardedmap(A, B, LGG), anti_unify(A, B, LGG)).
 
 % Each antiunificand has a copy of the same callback, so we only need to
-% retain the first antiunificand's copy.
-is_first_antiunificand(V, anti_unify(V1, _, _)) :- V == V1.
+% retain one (in this case, the first nonvar's) as a representative.
+is_representative_antiunificand(V, anti_unify(A, B, _)) =>
+    var(A) -> V == A ; V == B.
 
-same_functor(A, B) :-
+same_functor(A, B), nonvar(A), nonvar(B) =>
     functor(A, Name, Arity),
     functor(B, Name, Arity).

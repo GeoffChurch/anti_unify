@@ -40,12 +40,10 @@ Executing the following goal from the top-level `anti_unify` directory should ru
 
 ---
 
-TODO: make ISO-compatible.
-
 (Note to self) To publish a new version:
 1. update `pack.pl`
 2. do GitHub release with new tag matching the pack.pl version
 3. execute:
-```prolog
-?- make_directory(potato), pack_install(anti_unify, [url('http://github.com/GeoffChurch/anti_unify/archive/13.17.zip'), package_directory(potato)]).
+```bash
+swipl -g "make_directory(temp), pack_install(anti_unify, [url('https://github.com/GeoffChurch/anti_unify/archive/0.5.zip'), pack_directory(temp), interactive(false)]), delete_directory_and_contents(temp)" -t halt
 ```
